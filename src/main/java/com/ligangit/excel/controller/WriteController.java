@@ -6,6 +6,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.ligangit.excel.config.CommonCellStyleStrategy;
 import com.ligangit.excel.entity.Member;
 import com.ligangit.excel.handler.CustomCellWriteHandler;
+import com.ligangit.excel.handler.ExcelLockingHandler;
 import com.ligangit.excel.handler.WaterMarkHandler;
 import com.ligangit.excel.util.ExcelUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -88,8 +89,11 @@ public class WriteController {
 //                    .excelType(ExcelTypeEnum.XLS)
                     // EasyExcel使用时需要设置inMemory(true)，否则默认使用的是SXSSFWorkbook，会报错！
                     .inMemory(true)
+                    .password("123456")
                     // 设置水印
                     .registerWriteHandler(new WaterMarkHandler("这是水印文案内容"))
+                    // 设置只读
+                    .registerWriteHandler(new ExcelLockingHandler())
                     // 注册通用格式策略
 //                    .registerWriteHandler(CommonCellStyleStrategy.getHorizontalCellStyleStrategy())
                     // 设置自定义格式策略

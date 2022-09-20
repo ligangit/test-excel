@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRelation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTSheetProtection;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,8 +39,31 @@ public class ExcelLockingHandler implements SheetWriteHandler {
     @SneakyThrows
     @Override
     public void afterSheetCreate(WriteWorkbookHolder writeWorkbookHolder, WriteSheetHolder writeSheetHolder) {
-        // 设置只读
-        ((XSSFSheet)writeSheetHolder.getSheet()).enableLocking();
+        XSSFSheet sheet = (XSSFSheet) writeSheetHolder.getSheet();
+
+        //设置只读
+        sheet.enableLocking();
+        // 如果需要定义比较详细的权限，需要设置如下内容
+        // 定义比较详细的excel权限 ------开始
+        CTSheetProtection sheetProtection = sheet.getCTWorksheet().getSheetProtection();
+        sheetProtection.setSelectLockedCells(false);
+        sheetProtection.setSelectUnlockedCells(false);
+        sheetProtection.setFormatCells(false);
+        sheetProtection.setFormatColumns(true);
+        sheetProtection.setFormatRows(true);
+        sheetProtection.setInsertColumns(true);
+        sheetProtection.setInsertRows(true);
+        sheetProtection.setInsertHyperlinks(true);
+        sheetProtection.setDeleteColumns(true);
+        sheetProtection.setDeleteRows(true);
+        sheetProtection.setSort(true);
+        sheetProtection.setAutoFilter(true);
+        sheetProtection.setPivotTables(true);
+        sheetProtection.setObjects(true);
+        sheetProtection.setScenarios(true);
+        // 定义比较详细的excel权限 ------结束
+        //333是密码
+        sheet.protectSheet(new String("333"));
     }
 }
 
